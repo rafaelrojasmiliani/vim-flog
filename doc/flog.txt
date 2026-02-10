@@ -302,6 +302,11 @@ These commands only work in the |:Flog| buffer.
 
   Sets |flog-'!|.
 
+:Flogsplitcommitdiff                                 *:Flogsplitcommitdiff*
+
+  Open a |vimdiff| for the commit under the cursor in a
+  temporary |flog-side-window|.
+
 ==============================================================================
 MAPPINGS                                                       *flog-mappings*
 
@@ -320,6 +325,12 @@ g?                                                                   *flog-g?*
 
   Open the commit under the cursor in a temporary |flog-side-window|.
   Sets |flog-'!| to the commit under the cursor.
+
+                                             *<Plug>(FlogSplitCommitDiffDown)*
+1                                                                     *flog-1*
+
+  Open a horizontal |vimdiff| for the commit under the cursor in a
+  temporary |flog-side-window|.
 
                                            *<Plug>(FlogVSplitCommitRightPath)*
 <Tab>                                                             *flog-<Tab>*

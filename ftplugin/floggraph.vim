@@ -21,6 +21,7 @@ let b:minitrailspace_disable = v:true
 
 command! -buffer -bang -range=0 -complete=customlist,flog#cmd#flog#args#Complete -nargs=* Flogsetargs call flog#cmd#FlogSetArgs([<f-args>], !empty('<bang>'))
 command! -buffer Flogsplitcommit call flog#ExecTmp(flog#Format('<mods> ' .. flog#backend#GetUserSplitCommand() .. ' %h'), { 'blur': 1, 'static': 1 })
+command! -buffer Flogsplitcommitdiff call flog#ExecTmp(flog#Format('<mods> Gvdiffsplit %h^!'), { 'blur': 1, 'static': 1 })
 cnoreabbrev Flogspc Flogsplitcommit
 command! -buffer Flogmarks call flog#floggraph#mark#PrintAll()
 
@@ -39,6 +40,11 @@ if !hasmapto('<Plug>(FlogVSplitCommitRight)')
   nmap <buffer> <CR> <Plug>(FlogVSplitCommitRight)
 endif
 nnoremap <buffer> <silent> <Plug>(FlogVSplitCommitRight) :vertical belowright Flogsplitcommit<CR>
+
+if !hasmapto('<Plug>(FlogSplitCommitDiffDown)')
+  nmap <buffer> 1 <Plug>(FlogSplitCommitDiffDown)
+endif
+nnoremap <buffer> <silent> <Plug>(FlogSplitCommitDiffDown) :belowright Flogsplitcommitdiff<CR>
 
 if !hasmapto('<Plug>(FlogVSplitCommitPathsRight)')
   nmap <buffer> <Tab> <Plug>(FlogVSplitCommitPathsRight)
