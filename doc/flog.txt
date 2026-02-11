@@ -305,7 +305,8 @@ These commands only work in the |:Flog| buffer.
 :Flogsplitcommitdiff                                 *:Flogsplitcommitdiff*
 
   Open a |vimdiff| for the commit under the cursor in a
-  temporary |flog-side-window|.
+  temporary |flog-side-window| by first creating a horizontal split and then
+  running |:Gvdiffsplit| on that commit.
 
 ==============================================================================
 MAPPINGS                                                       *flog-mappings*
