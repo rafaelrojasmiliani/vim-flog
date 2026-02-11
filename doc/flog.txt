@@ -302,6 +302,18 @@ These commands only work in the |:Flog| buffer.
 
   Sets |flog-'!|.
 
+:Flogsplitcommitdiff                                 *:Flogsplitcommitdiff*
+
+  Open a |vimdiff| for the commit under the cursor and the file selected
+  in the |quickfix| list created by |:Flogcommitfiles|.
+
+  Requires that quickfix window to be open. Creates a horizontal split and
+  then runs |:Gvdiffsplit| for the selected file in that commit.
+
+:Flogcommitfiles                                    *:Flogcommitfiles*
+
+  Open the quickfix list with files modified by the commit under the cursor.
+
 ==============================================================================
 MAPPINGS                                                       *flog-mappings*
 
@@ -320,6 +332,17 @@ g?                                                                   *flog-g?*
 
   Open the commit under the cursor in a temporary |flog-side-window|.
   Sets |flog-'!| to the commit under the cursor.
+
+                                             *<Plug>(FlogSplitCommitDiffDown)*
+1                                                                     *flog-1*
+
+  Open a horizontal |vimdiff| for the commit under the cursor and the
+  currently selected file in the |:Flogcommitfiles| quickfix window.
+
+                                               *<Plug>(FlogCommitFilesQuickfix)*
+gf                                                                 *flog-gf*
+
+  Open the quickfix list with files modified by the commit under the cursor.
 
                                            *<Plug>(FlogVSplitCommitRightPath)*
 <Tab>                                                             *flog-<Tab>*
