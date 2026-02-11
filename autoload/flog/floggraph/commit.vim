@@ -2,6 +2,45 @@
 " This file contains functions for handling commits in "floggraph" buffers.
 "
 
+function! flog#floggraph#commit#OpenFilesQuickfix(line = '.') abort
+  call flog#floggraph#buf#AssertFlogBuf()
+
+  let l:commit = flog#floggraph#commit#GetAtLine(a:line)
+  if empty(l:commit) || empty(get(l:commit, 'hash', ''))
+    call flog#print#err('No commit under cursor')
+    return []
+  endif
+
+  let l:cmd = flog#git#GetCommand([
+        \ 'show',
+        \ '--pretty=format:',
+        \ '--name-only',
+        \ l:commit.hash,
+        \ '--'])
+
+  let l:files = uniq(filter(flog#shell#Run(l:cmd), '!empty(v:val)'))
+
+  let l:workdir = flog#git#GetWorkdir()
+  let l:items = []
+  for l:file in l:files
+    call add(l:items, {
+          \ 'filename': empty(l:workdir) ? l:file : fnamemodify(l:workdir .. '/' .. l:file, ':p'),
+          \ 'lnum': 1,
+          \ 'col': 1,
+          \ 'text': l:commit.hash,
+          \ })
+  endfor
+
+  call setqflist([], 'r', {
+        \ 'title': 'Flog commit files: ' .. l:commit.hash,
+        \ 'items': l:items,
+        \ })
+
+  copen
+
+  return l:items
+endfunction
+
 function! flog#floggraph#commit#GetIndexAtLine(line = '.') abort
   call flog#floggraph#buf#AssertFlogBuf()
   let l:state = flog#state#GetBufState()
