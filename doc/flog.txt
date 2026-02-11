@@ -304,9 +304,11 @@ These commands only work in the |:Flog| buffer.
 
 :Flogsplitcommitdiff                                 *:Flogsplitcommitdiff*
 
-  Open a |vimdiff| for the commit under the cursor in a
-  temporary |flog-side-window| by first creating a horizontal split and then
-  running |:Gvdiffsplit| on that commit.
+  Open a |vimdiff| for the commit under the cursor and the file selected
+  in the |quickfix| list created by |:Flogcommitfiles|.
+
+  Requires that quickfix window to be open. Creates a horizontal split and
+  then runs |:Gvdiffsplit| for the selected file in that commit.
 
 :Flogcommitfiles                                    *:Flogcommitfiles*
 
@@ -334,8 +336,8 @@ g?                                                                   *flog-g?*
                                              *<Plug>(FlogSplitCommitDiffDown)*
 1                                                                     *flog-1*
 
-  Open a horizontal |vimdiff| for the commit under the cursor in a
-  temporary |flog-side-window|.
+  Open a horizontal |vimdiff| for the commit under the cursor and the
+  currently selected file in the |:Flogcommitfiles| quickfix window.
 
                                                *<Plug>(FlogCommitFilesQuickfix)*
 gf                                                                 *flog-gf*

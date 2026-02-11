@@ -41,6 +41,65 @@ function! flog#floggraph#commit#OpenFilesQuickfix(line = '.') abort
   return l:items
 endfunction
 
+function! flog#floggraph#commit#GetQuickfixFile() abort
+  let l:qf = getqflist({ 'idx': 0, 'items': 0, 'title': 0 })
+
+  if empty(l:qf.title) || l:qf.title !~# '^Flog commit files: '
+    call flog#print#err('Open :Flogcommitfiles quickfix window first')
+    return ''
+  endif
+
+  let l:qf_win_open = !empty(filter(getwininfo(), 'v:val.quickfix && !v:val.loclist'))
+  if !l:qf_win_open
+    call flog#print#err('Open :Flogcommitfiles quickfix window first')
+    return ''
+  endif
+
+  if l:qf.idx <= 0 || l:qf.idx > len(l:qf.items)
+    call flog#print#err('No selected file in quickfix')
+    return ''
+  endif
+
+  let l:item = l:qf.items[l:qf.idx - 1]
+  let l:file = get(l:item, 'filename', '')
+  if empty(l:file)
+    call flog#print#err('No selected file in quickfix')
+    return ''
+  endif
+
+  let l:workdir = flog#git#GetWorkdir()
+  if !empty(l:workdir)
+    let l:workdir = fnamemodify(l:workdir, ':p')
+    let l:file = fnamemodify(l:file, ':p')
+    if l:file[: len(l:workdir) - 1] ==# l:workdir
+      let l:file = l:file[len(l:workdir) : ]
+      if l:file[:0] ==# '/'
+        let l:file = l:file[1 : ]
+      endif
+    endif
+  endif
+
+  return l:file
+endfunction
+
+function! flog#floggraph#commit#OpenSplitCommitDiff(line = '.') abort
+  call flog#floggraph#buf#AssertFlogBuf()
+
+  let l:commit = flog#floggraph#commit#GetAtLine(a:line)
+  if empty(l:commit) || empty(get(l:commit, 'hash', ''))
+    call flog#print#err('No commit under cursor')
+    return
+  endif
+
+  let l:file = flog#floggraph#commit#GetQuickfixFile()
+  if empty(l:file)
+    return
+  endif
+
+  let l:cmd = '<mods> split \| Gvdiffsplit %H^! -- ' .. flog#shell#Escape(l:file)
+  call flog#ExecTmp(flog#Format(l:cmd), { 'blur': 1, 'static': 1 })
+endfunction
+
 function! flog#floggraph#commit#GetIndexAtLine(line = '.') abort
   call flog#floggraph#buf#AssertFlogBuf()
   let l:state = flog#state#GetBufState()
